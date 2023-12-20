@@ -1,21 +1,49 @@
 package com.example.cryptoapp
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.cryptoapp.API.CryptoEntity
-import com.example.cryptoapp.API.RetrofitInstance
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.cryptoapp.persistence.cache.CoinDao
+import com.example.cryptoapp.persistence.cache.CoinDatabase
+import com.example.cryptoapp.persistence.cache.CoinEntity
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class MainCryptoViewModel : ViewModel() {
-    val cryptoList = mutableStateListOf<CryptoEntity>()
+class MainCryptoViewModel(private val cryptoDao: CoinDao? = null) : ViewModel() {
+    private val _cryptoList = MutableStateFlow<List<CoinEntity>>(emptyList())
+    val cryptoList: MutableStateFlow<List<CoinEntity>> = _cryptoList
 
     init {
-        viewModelScope.launch {
-            val response = RetrofitInstance.api.getListOfCryptos()
-            if (response.isSuccessful && response.body() != null) {
-                cryptoList.addAll(response.body()!!)
+        loadCryptos()
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application =
+                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as CoinApp)
+                MainCryptoViewModel(
+                    cryptoDao = CoinDatabase.getDatabase(application).cryptoDao()
+                )
             }
         }
     }
+
+    private fun loadCryptos() {
+        viewModelScope.launch {
+            // Fetch the cached data from Room
+            cryptoDao?.getAllCryptos()?.collect { cryptoEntities ->
+                _cryptoList.value = cryptoEntities
+            }
+        }
+    }
+
 }
+
+
+
+
+
+

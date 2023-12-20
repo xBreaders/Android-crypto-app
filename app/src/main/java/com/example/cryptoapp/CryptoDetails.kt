@@ -17,7 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +41,7 @@ fun CryptoDetailScreen(navController: NavHostController, cryptoName: String) {
                         )
                     }
                 },
-                colors = TopAppBarDefaults.smallTopAppBarColors(
+                colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 )
             )
@@ -55,7 +55,6 @@ fun CryptoDetailScreen(navController: NavHostController, cryptoName: String) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CryptoDetailCard(cryptoName = cryptoName)
-            // Additional content here, like charts and other data
         }
     }
 }
@@ -88,7 +87,6 @@ fun CryptoDetailCard(cryptoName: String) {
                 color = Color.Green
             )
             Spacer(modifier = Modifier.height(16.dp))
-            // Placeholders for other data such as volume, market cap, etc.
             Text(
                 text = "Trading Volume: $2,000,000",
                 style = MaterialTheme.typography.bodyMedium

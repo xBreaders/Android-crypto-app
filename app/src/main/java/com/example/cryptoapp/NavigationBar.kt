@@ -1,6 +1,5 @@
 package com.example.cryptoapp
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -18,7 +17,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 
 
 @Composable
@@ -29,15 +27,22 @@ fun MainScreen(navController: NavHostController) {
         Screen.Profile
     )
 
+    val MainCryptoVM = MainCryptoViewModel()
+
     Scaffold(
         bottomBar = { BottomNavigationBar(items, navController) }
     ) { innerPadding ->
-        NavHost(navController, startDestination = Screen.Home.route, Modifier.padding(innerPadding)) {
-            composable(Screen.Home.route) { CryptoListScreen(navController) }
+        NavHost(
+            navController,
+            startDestination = Screen.Home.route,
+            Modifier.padding(innerPadding)
+        ) {
+            composable(Screen.Home.route) { CryptoListScreen(MainCryptoVM) }
             composable(Screen.Market.route) { /* Market Screen Content */ }
             composable(Screen.Profile.route) { /* Profile Screen Content */ }
             composable("cryptoDetail/{cryptoName}") { backStackEntry ->
-                CryptoDetailScreen(navController,
+                CryptoDetailScreen(
+                    navController,
                     cryptoName = backStackEntry.arguments?.getString("cryptoName") ?: "Unknown")
             }
             // Add composable for other screens if necessary
