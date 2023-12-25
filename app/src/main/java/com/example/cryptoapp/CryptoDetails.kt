@@ -1,11 +1,15 @@
 package com.example.cryptoapp
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -19,20 +23,36 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.cryptoapp.persistence.api.CoinData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CryptoDetailScreen(navController: NavHostController, cryptoName: String) {
+fun CryptoDetailScreen(
+    navController: NavHostController,
+    cryptoId: Int,
+    vm: CryptoDetailsViewModel
+) {
+    // Fetch details when the screen is first displayed
+    LaunchedEffect(cryptoId) {
+        vm.fetchCoinDetails(cryptoId)
+    }
+
+    val uiState by vm.uiState.collectAsState()
+
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(cryptoName) },
+                title = { Text(uiState.coinDetails.name, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
@@ -51,56 +71,103 @@ fun CryptoDetailScreen(navController: NavHostController, cryptoName: String) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CryptoDetailCard(cryptoName = cryptoName)
+            CryptoDetailCard(uiState.coinDetails)
         }
     }
 }
 
 @Composable
-fun CryptoDetailCard(cryptoName: String) {
+fun CryptoDetailCard(coinData: CoinData) {
+    val coinDetails = coinData.quote["USD"]
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(vertical = 8.dp),
+        shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "$cryptoName Details",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Current Price: $1000.00",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "24h Change: +2.5%",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Green
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Trading Volume: $2,000,000",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Market Cap: $10,000,000",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "All Time High: $1,500.00",
-                style = MaterialTheme.typography.bodyMedium
-            )
+        LazyColumn(modifier = Modifier.padding(16.dp)) {
+            item {
+                Text(
+                    text = "${coinData.name} Details",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp)) // Reduced height for less clutter
+            }
+            item { DetailItem(label = "Symbol", value = coinData.symbol) }
+            item { DetailItem(label = "Current Price", value = "${coinDetails?.price} USD") }
+            item {
+                DetailItem(
+                    label = "24h Change",
+                    value = "${coinDetails?.volume_change_24h}%",
+                    color = getColorForChange(coinDetails?.volume_change_24h)
+                )
+            }
+            item { DetailItem(label = "Market Cap", value = "${coinDetails?.market_cap} USD") }
+            item { DetailItem(label = "Volume", value = "${coinDetails?.volume_24h} USD") }
+            item {
+                DetailItem(
+                    label = "FD Market Cap",
+                    value = "${coinDetails?.fully_diluted_market_cap} USD"
+                )
+            }
+            item {
+                DetailItem(
+                    label = "Market Cap Dominance",
+                    value = "${coinDetails?.market_cap_dominance}%",
+                    color = getColorForChange(coinDetails?.market_cap_dominance)
+                )
+            }
+            item {
+                DetailItem(
+                    label = "Circulating Supply",
+                    value = "${coinData.circulating_supply}"
+                )
+            }
+            item { DetailItem(label = "Total Supply", value = "${coinData.total_supply}") }
+            item { DetailItem(label = "Max Supply", value = "${coinData.max_supply ?: "-"}") }
+            item {
+                DetailItem(
+                    label = "Number of Market Pairs",
+                    value = "${coinData.num_market_pairs}"
+                )
+            }
+            item { DetailItem(label = "Last Updated", value = coinData.last_updated) }
+            item { DetailItem(label = "Date Added", value = coinData.date_added) }
         }
+    }
+}
+
+@Composable
+fun DetailItem(label: String, value: String, color: Color = Color.Unspecified) {
+
+
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Medium,
+            color = color
+        )
+    }
+    Spacer(modifier = Modifier.height(8.dp))
+}
+
+@Composable
+fun getColorForChange(change: Double?): Color {
+    return when {
+        change == null -> Color.Unspecified
+        change >= 0 -> Color.Green
+        else -> Color.Red
     }
 }

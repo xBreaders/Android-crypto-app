@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,7 +28,9 @@ fun MainScreen(navController: NavHostController) {
         Screen.Profile
     )
 
-    val MainCryptoVM = MainCryptoViewModel()
+    val MainCryptoVM: MainCryptoViewModel = viewModel(factory = MainCryptoViewModel.Factory)
+    val CryptoDetailsVM: CryptoDetailsViewModel =
+        viewModel(factory = CryptoDetailsViewModel.Factory)
 
     Scaffold(
         bottomBar = { BottomNavigationBar(items, navController) }
@@ -37,13 +40,18 @@ fun MainScreen(navController: NavHostController) {
             startDestination = Screen.Home.route,
             Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Home.route) { CryptoListScreen(MainCryptoVM) }
+            composable(Screen.Home.route) { CryptoListScreen(navController, MainCryptoVM) }
             composable(Screen.Market.route) { /* Market Screen Content */ }
             composable(Screen.Profile.route) { /* Profile Screen Content */ }
-            composable("cryptoDetail/{cryptoName}") { backStackEntry ->
+            composable("cryptoDetail/{cryptoId}") { backStackEntry ->
+                val cryptoIdStr = backStackEntry.arguments?.getString("cryptoId") ?: "1"
+                val cryptoId = cryptoIdStr.toIntOrNull() ?: 1
+
                 CryptoDetailScreen(
                     navController,
-                    cryptoName = backStackEntry.arguments?.getString("cryptoName") ?: "Unknown")
+                    cryptoId = cryptoId,
+                    vm = CryptoDetailsVM
+                )
             }
             // Add composable for other screens if necessary
         }

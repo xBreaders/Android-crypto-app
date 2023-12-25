@@ -1,5 +1,7 @@
-package com.example.cryptoapp.persistence.API
+package com.example.cryptoapp.persistence.api
 
+import android.content.Context
+import com.example.cryptoapp.persistence.cache.CoinDatabase
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -22,7 +24,7 @@ interface AppContainer {
 }
 
 
-class DefaultApp : AppContainer {
+class DefaultApp(private val context: Context) : AppContainer {
     private val baseUrl = "https://pro-api.coinmarketcap.com/"
 
     private val okHttpClient = OkHttpClient.Builder()
@@ -43,7 +45,10 @@ class DefaultApp : AppContainer {
     }
 
     override val repository: DefaultCoinRepository by lazy {
-        DefaultCoinRepositoryImpl(retrofitService)
+        DefaultCoinRepositoryImpl(
+            retrofitService,
+            CoinDatabase.getDatabase(context = context).coinDao()
+        )
     }
 }
 

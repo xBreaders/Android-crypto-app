@@ -3,34 +3,33 @@ package com.example.cryptoapp.persistence.scheduler
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.cryptoapp.persistence.API.DefaultCoinRepository
-import com.example.cryptoapp.persistence.cache.CoinDatabase
+import com.example.cryptoapp.persistence.api.DefaultApp
+import com.example.cryptoapp.persistence.api.asDatabaseEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class CryptoWorker(
     appContext: Context,
-    workerParams: WorkerParameters,
-    private val repository: DefaultCoinRepository
+    workerParams: WorkerParameters
 ) : CoroutineWorker(appContext, workerParams) {
 
-    override suspend fun doWork(): Result {
-        return try {
-            // Perform the data fetch
-            val response = repository.getCryptoListings()
-            if (response.isSuccessful) {
-                // Map the network model to database entity and cache it
-                response.body()?.data?.map { it.toEntity() }?.let {
-                    val dao = CoinDatabase.getDatabase(applicationContext).cryptoDao()
-                    dao.deleteAll()
-                    dao.insertAll(it)
-                }
-                Result.success()
-            } else {
-                Result.retry()
+    private val repository = DefaultApp(appContext).repository
+
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+
+        // Perform the data fetch
+        val response = repository.getCryptoListings()
+        if (response.isSuccessful) {
+            // Map the network model to database entity and cache it
+            response.body()?.data?.map { it.asDatabaseEntity() }?.let {
+                repository.upsertCoins(it)
             }
-        } catch (e: Exception) {
-            Result.failure()
+            Result.success()
+        } else {
+            Result.retry()
         }
     }
+
 }
 
 
