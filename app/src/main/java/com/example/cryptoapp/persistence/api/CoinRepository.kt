@@ -5,8 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface CoinMarketCapService {
-    @GET("v1/cryptocurrency/map")
-    suspend fun getCryptoMap(): CryptoResponse
 
     @GET("v1/cryptocurrency/listings/latest")
     suspend fun getCryptoListings(
