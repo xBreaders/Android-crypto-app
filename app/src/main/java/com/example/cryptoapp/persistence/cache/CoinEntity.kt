@@ -23,7 +23,9 @@ data class CoinEntity(
     @ColumnInfo(name = "marketCap")
     val marketCap: Double,
     @Embedded(prefix = "details_")
-    val coinDetails: CoinDetailsEntity
+    val coinDetails: CoinDetailsEntity,
+    //   @Embedded(prefix = "historical_")
+    // val historical : HistoricalDataEntity
 )
 
 
@@ -103,3 +105,4 @@ fun List<CoinEntity>.asDomainObject(): List<CoinData> {
         it.asDomainObject()
     }
 }
+

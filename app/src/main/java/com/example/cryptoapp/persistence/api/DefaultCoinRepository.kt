@@ -52,6 +52,13 @@ interface DefaultCoinRepository {
      * @return A [Flow] emitting [PagingData] containing [CoinData].
      */
     fun getPagedCoins(): Flow<PagingData<CoinData>>
+
+    suspend fun getKLinesBySymbol(
+        symbol: String,
+        interval: String
+    ): Response<List<List<CryptoHistoricalResponse>>>
+
+
 }
 
 /**
@@ -138,5 +145,16 @@ class DefaultCoinRepositoryImpl(
             ),
             pagingSourceFactory = { coinDao.getPagedCoins() }
         ).flow.map { pagingData -> pagingData.map { it.asDomainObject() } }
+    }
+
+    override suspend fun getKLinesBySymbol(
+        symbol: String,
+        interval: String
+    ): Response<List<List<CryptoHistoricalResponse>>> {
+        return coinMarketCapService.getKLinesBySymbol(
+            url = "https://api.binance.com/api/v3/klines",
+            symbol = symbol,
+            interval = interval
+        )
     }
 }

@@ -20,5 +20,8 @@ interface CoinDao {
     @Query("SELECT * FROM cryptocurrencies WHERE id = :coinId")
     fun getCoinById(coinId: Int): Flow<CoinEntity>
 
+    @Query("SELECT * FROM cryptocurrencies WHERE name LIKE :query OR symbol LIKE :query OR id LIKE :query")
+    fun searchCoins(query: String): Flow<List<CoinEntity>>
+
 
 }

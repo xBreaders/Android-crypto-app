@@ -45,6 +45,7 @@ interface AppContainer {
 }
 
 
+
 /**
  * The default implementation of [AppContainer], providing dependency injection for the app.
  *
@@ -58,7 +59,7 @@ class DefaultApp(private val context: Context) : AppContainer {
      * OkHttpClient configured with an interceptor for API key inclusion.
      */
     private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(ApiKeyInterceptor("your_api_key")) // Replace with your actual API key
+        .addInterceptor(ApiKeyInterceptor("b1888a64-a5ef-45be-88aa-c9567748c0e9")) // Replace with your actual API key
         .build()
 
     /**

@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -36,7 +37,10 @@ import java.text.DecimalFormat
 
 
 @Composable
-fun CryptoListScreen(navController: NavHostController, viewModel: MainCryptoViewModel) {
+fun CryptoListScreen(
+    navController: NavHostController,
+    viewModel: MainCryptoViewModel = viewModel(factory = MainCryptoViewModel.Factory)
+) {
     val pagedCoins = viewModel.pagedCoins.collectAsLazyPagingItems()
 
     Column {
@@ -74,7 +78,7 @@ fun CryptoListScreen(navController: NavHostController, viewModel: MainCryptoView
 @Composable
 fun CryptoListHeader() {
     Surface(
-        color = MaterialTheme.colorScheme.primaryContainer,
+        color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)

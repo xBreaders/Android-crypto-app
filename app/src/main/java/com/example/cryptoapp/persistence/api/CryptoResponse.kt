@@ -3,6 +3,8 @@ package com.example.cryptoapp.persistence.api
 import com.example.cryptoapp.persistence.cache.CoinDetailsEntity
 import com.example.cryptoapp.persistence.cache.CoinEntity
 import com.google.gson.annotations.SerializedName
+import java.text.DecimalFormat
+
 
 data class CryptoResponse(
     @SerializedName("data")
@@ -40,14 +42,17 @@ data class CryptoQuote(
 )
 
 fun CoinData.asDatabaseEntity(): CoinEntity {
+    val formatter = DecimalFormat("#.##")
+    formatter.isGroupingUsed = false // Avoids inserting commas in large numbers
+
     return CoinEntity(
         id = id,
         name = name,
         symbol = symbol,
         rank = cmc_rank,
-        price = quote["USD"]?.price ?: 0.0,
-        percentChange24h = quote["USD"]?.percent_change_24h ?: 0.0,
-        marketCap = quote["USD"]?.market_cap ?: 0.0,
+        price = formatter.format(quote["USD"]?.price ?: 0.0).toDouble(),
+        percentChange24h = formatter.format(quote["USD"]?.percent_change_24h ?: 0.0).toDouble(),
+        marketCap = formatter.format(quote["USD"]?.market_cap ?: 0.0).toDouble(),
         coinDetails = CoinDetailsEntity(
             coinId = id,
             circulatingSupply = circulating_supply,
@@ -59,12 +64,15 @@ fun CoinData.asDatabaseEntity(): CoinEntity {
             tags = tags.joinToString(","),
             slug = slug,
             infiniteSupply = infinite_supply,
-            volume = quote["USD"]?.volume_24h ?: 0.0,
-            fullyDilutedMarketCap = quote["USD"]?.fully_diluted_market_cap ?: 0.0,
-            marketCapDominance = quote["USD"]?.market_cap_dominance ?: 0.0,
+            volume = formatter.format(quote["USD"]?.volume_24h ?: 0.0).toDouble(),
+            fullyDilutedMarketCap = formatter.format(quote["USD"]?.fully_diluted_market_cap ?: 0.0)
+                .toDouble(),
+            marketCapDominance = formatter.format(quote["USD"]?.market_cap_dominance ?: 0.0)
+                .toDouble(),
             quoteLastUpdated = quote["USD"]?.last_updated ?: ""
         )
     )
 }
+
 
 

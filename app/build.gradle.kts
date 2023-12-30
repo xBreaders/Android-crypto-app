@@ -97,4 +97,7 @@ dependencies {
     implementation("androidx.paging:paging-runtime-ktx:$paging_version")
     implementation("androidx.paging:paging-compose:3.3.0-alpha02")
     dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.10")
+    implementation("com.patrykandpatrick.vico:compose-m3:2.0.0-alpha.5")
+    implementation("com.patrykandpatrick.vico:core:2.0.0-alpha.5")
+    implementation("com.patrykandpatrick.vico:views:2.0.0-alpha.5")
 }
