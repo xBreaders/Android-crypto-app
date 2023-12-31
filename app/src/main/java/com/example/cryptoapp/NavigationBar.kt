@@ -16,7 +16,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.cryptoapp.coin.CryptoDetailScreen
+import com.example.cryptoapp.ui.detailpage.CryptoDetailScreen
+import com.example.cryptoapp.ui.mainpage.CryptoListScreen
+import com.example.cryptoapp.ui.searchpage.SearchCryptoScreen
 
 
 @Composable
@@ -35,7 +37,7 @@ fun MainScreen(navController: NavHostController) {
             Modifier.padding(innerPadding)
         ) {
             composable(Screen.Main.route) { CryptoListScreen(navController) }
-            composable(Screen.Search.route) { /* Market Screen Content */ }
+            composable(Screen.Search.route) { SearchCryptoScreen(navController) }
             composable("cryptoDetail/{cryptoId}") { backStackEntry ->
                 val cryptoIdStr = backStackEntry.arguments?.getString("cryptoId") ?: "1"
                 val cryptoId = cryptoIdStr.toIntOrNull() ?: 1

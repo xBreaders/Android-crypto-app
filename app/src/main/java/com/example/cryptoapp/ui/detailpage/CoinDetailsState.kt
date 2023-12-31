@@ -1,4 +1,4 @@
-package com.example.cryptoapp.coin
+package com.example.cryptoapp.ui.detailpage
 
 import com.example.cryptoapp.persistence.api.CoinData
 import com.example.cryptoapp.persistence.api.KLine

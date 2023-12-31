@@ -1,4 +1,4 @@
-package com.example.cryptoapp.coin
+package com.example.cryptoapp.ui.detailpage.detailchart
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

@@ -1,4 +1,4 @@
-package com.example.cryptoapp.coin
+package com.example.cryptoapp.ui.detailpage.detailchart
 
 import android.graphics.Typeface
 import androidx.compose.material3.MaterialTheme

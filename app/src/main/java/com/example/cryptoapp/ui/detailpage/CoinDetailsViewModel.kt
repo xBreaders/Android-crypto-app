@@ -1,4 +1,4 @@
-package com.example.cryptoapp.coin
+package com.example.cryptoapp.ui.detailpage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

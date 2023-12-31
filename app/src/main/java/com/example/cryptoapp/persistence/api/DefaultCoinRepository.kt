@@ -47,6 +47,10 @@ interface DefaultCoinRepository {
      */
     suspend fun upsertCoins(coinList: List<CoinEntity>)
 
+    suspend fun getCoinByQuery(query: String): Flow<List<CoinData>>
+
+    suspend fun requestCoinBySymbol(symbol: String): CoinData
+
     /**
      * Retrieves a paginated list of coins.
      * @return A [Flow] emitting [PagingData] containing [CoinData].
@@ -130,6 +134,29 @@ class DefaultCoinRepositoryImpl(
         } catch (e: Exception) {
             throw Exception("Unknown error inserting coin list into database: ${e.message}")
         }
+    }
+
+
+    override suspend fun getCoinByQuery(query: String): Flow<List<CoinData>> {
+        try {
+            return coinDao.searchCoins(query).map { it.asDomainObject() }
+        } catch (e: SQLException) {
+            throw Exception("Error retrieving coin list from database: ${e.message}")
+        } catch (e: Exception) {
+            throw Exception("Unknown error retrieving coin list from database: ${e.message}")
+        }
+    }
+
+    override suspend fun requestCoinBySymbol(symbol: String): CoinData {
+
+        val response = coinMarketCapService.requestCoinById(symbol)
+        if (response.isSuccessful) {
+            response.body()?.data?.map { it.asDatabaseEntity() }?.let {
+                upsertCoins(it)
+                return it[0].asDomainObject()
+            }
+        }
+        throw Exception("Error retrieving coin from database: ${response.message()}")
     }
 
     /**

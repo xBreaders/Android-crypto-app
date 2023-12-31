@@ -1,4 +1,4 @@
-package com.example.cryptoapp
+package com.example.cryptoapp.ui.mainpage
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -12,6 +12,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.example.cryptoapp.CoinApp
 import com.example.cryptoapp.persistence.api.DefaultCoinRepository
 import com.example.cryptoapp.persistence.scheduler.CryptoWorker
 import java.util.concurrent.TimeUnit

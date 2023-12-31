@@ -14,6 +14,12 @@ interface CoinMarketCapService {
         @Query("convert") convert: String = "USD"
     ): Response<CryptoResponse>
 
+    @GET("v1/cryptocurrency/listings/latest")
+    suspend fun requestCoinById(
+        @Query("symbol") symbol: String,
+        @Query("convert") convert: String = "USD"
+    ): Response<CryptoResponse>
+
     @GET
     suspend fun getKLinesBySymbol(
         //using different api for klines, because the other one is paid

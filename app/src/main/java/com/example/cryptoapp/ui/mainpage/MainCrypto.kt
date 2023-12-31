@@ -1,8 +1,7 @@
-package com.example.cryptoapp
+package com.example.cryptoapp.ui.mainpage
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,32 +47,21 @@ fun CryptoListScreen(
         Divider()
 
         LazyColumn {
-            if (pagedCoins.loadState.refresh == LoadState.Loading) {
-                item {
-                    Text(
-                        text = "Waiting for items to load from the database",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentWidth(Alignment.CenterHorizontally)
-                    )
-                }
-            }
-
-            items(count = pagedCoins.itemCount) { index ->
-                val cryptoData = pagedCoins[index]
-                cryptoData?.let {
-                    AnimatedCryptoItem(crypto = it) {
-                        navController.navigate("cryptoDetail/${it.id}")
+            when (pagedCoins.loadState.refresh) {
+                is LoadState.Loading -> item { LoadingItem() }
+                is LoadState.Error -> item { ErrorItem("Failed to load data") }
+                else -> items(pagedCoins.itemCount) { index ->
+                    pagedCoins[index]?.let {
+                        AnimatedCryptoItem(crypto = it) {
+                            navController.navigate("cryptoDetail/${it.id}")
+                        }
+                        Divider()
                     }
-                    Divider()
                 }
-
             }
         }
-
     }
 }
-
 
 @Composable
 fun CryptoListHeader() {
@@ -97,63 +86,82 @@ fun CryptoListHeader() {
 
 @Composable
 fun AnimatedCryptoItem(crypto: CoinData, onClick: () -> Unit) {
-    val clicked by remember { mutableStateOf(false) }
+    var isClicked by remember { mutableStateOf(false) }
     val backgroundColor by animateColorAsState(
-        targetValue = if (clicked) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
+        targetValue = if (isClicked) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
         animationSpec = tween(durationMillis = 300), label = ""
     )
 
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .background(backgroundColor)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
-
-    ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1.3f)) {
-                Text(
-                    text = crypto.name,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    crypto.symbol,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            .clickable {
+                isClicked = !isClicked
+                onClick()
             }
-            Text(
-                crypto.quote["USD"]?.price!!.toPriceFormat(),
-                modifier = Modifier.weight(1.5f),
-                textAlign = TextAlign.End
-            )
-            Text(
-                crypto.quote["USD"]?.percent_change_24h!!.toPercentageChangeFormat(),
-                modifier = Modifier.weight(1.1f),
-                textAlign = TextAlign.End,
-                color = if (crypto.quote["USD"]!!.percent_change_24h >= 0) Color.Green else Color.Red
-            )
-        }
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor)
+    ) {
+        CryptoItemRow(crypto)
     }
 }
 
-
 @Composable
-fun Double.toPriceFormat(): String {
-    return DecimalFormat("$#,##0.00").format(this)
+fun CryptoItemRow(crypto: CoinData) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(all = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1.3f)) {
+            Text(
+                text = crypto.name,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                crypto.symbol,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Text(
+            crypto.quote["USD"]?.price!!.toPriceFormat(),
+            modifier = Modifier.weight(1.5f),
+            textAlign = TextAlign.End
+        )
+        Text(
+            crypto.quote["USD"]?.percent_change_24h!!.toPercentageChangeFormat(),
+            modifier = Modifier.weight(1.1f),
+            textAlign = TextAlign.End,
+            color = if (crypto.quote["USD"]!!.percent_change_24h >= 0) Color.Green else Color.Red
+        )
+    }
 }
 
 @Composable
-fun Double.toPercentageChangeFormat(): String {
-    return DecimalFormat("0.00%").format(this / 100)
+fun LoadingItem() {
+    Text(
+        text = "Waiting for items to load from the database",
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
+    )
 }
+
+@Composable
+fun ErrorItem(message: String) {
+    Text(
+        text = "Error: $message",
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally),
+        color = MaterialTheme.colorScheme.error
+    )
+}
+
+fun Double.toPriceFormat(): String = DecimalFormat("$#,##0.00").format(this)
+fun Double.toPercentageChangeFormat(): String = DecimalFormat("0.00%").format(this / 100)
