@@ -1,9 +1,5 @@
 package com.example.cryptoapp.persistence.api
 
-data class CryptoHistoricalResponse(
-    val data: List<KLine> = listOf(),
-)
-
 data class KLine(
     val openTime: Long, // Kline open time
     val open: Double, // Kline open price
@@ -13,7 +9,9 @@ data class KLine(
     val volume: Double, // Kline base asset volume
     val closeTime: Long,    // Kline close time
     val quoteAssetVolume: Double, // Kline quote asset volume
-    val numberOfTrades: Double, // Number of trades
+    val numberOfTrades: Int, // Number of trades
     val takerBuyBaseAssetVolume: Double, // Taker buy base asset volume
     val takerBuyQuoteAssetVolume: Double, // Taker buy quote asset volume
 )
+
+

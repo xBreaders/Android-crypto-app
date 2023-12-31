@@ -87,14 +87,14 @@ dependencies {
 
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
-    val room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    implementation("androidx.room:room-common:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-    implementation("androidx.room:room-paging:$room_version")
-    ksp("androidx.room:room-compiler:$room_version")
-    val paging_version = "3.2.1"
-    implementation("androidx.paging:paging-runtime-ktx:$paging_version")
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-common:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation("androidx.room:room-paging:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    val pagingVersion = "3.2.1"
+    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
     implementation("androidx.paging:paging-compose:3.3.0-alpha02")
     dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.10")
     implementation("com.patrykandpatrick.vico:compose-m3:2.0.0-alpha.5")

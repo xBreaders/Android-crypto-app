@@ -62,6 +62,7 @@ class DefaultApp(private val context: Context) : AppContainer {
         .addInterceptor(ApiKeyInterceptor("b1888a64-a5ef-45be-88aa-c9567748c0e9")) // Replace with your actual API key
         .build()
 
+
     /**
      * Retrofit service for making network requests.
      */

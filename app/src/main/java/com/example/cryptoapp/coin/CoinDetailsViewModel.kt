@@ -47,17 +47,10 @@ class CoinDetailsViewModel(private val repository: DefaultCoinRepository, privat
                         coinDetailsResponse.symbol + "USDT",
                         _uiState.value.selectedInterval
                     )
-                    if (historicalResponse.isSuccessful) {
-                        val historicalData =
-                            historicalResponse.body()?.map { parseKLine(it) } ?: emptyList()
-                        _uiState.value = _uiState.value.copy(historicalData = historicalData)
-                    } else {
-                        _uiState.value =
-                            _uiState.value.copy(error = "Failed to fetch historical data")
-                    }
+                    _uiState.value = _uiState.value.copy(historicalData = historicalResponse)
+
                 } catch (e: Exception) {
                     _uiState.value = _uiState.value.copy(error = "Network error occurred")
-                    //print out the error
                     e.printStackTrace()
                 }
             } else {

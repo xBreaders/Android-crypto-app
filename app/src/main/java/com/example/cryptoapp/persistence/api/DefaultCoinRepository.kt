@@ -56,7 +56,7 @@ interface DefaultCoinRepository {
     suspend fun getKLinesBySymbol(
         symbol: String,
         interval: String
-    ): Response<List<List<CryptoHistoricalResponse>>>
+    ): List<KLine>
 
 
 }
@@ -150,11 +150,36 @@ class DefaultCoinRepositoryImpl(
     override suspend fun getKLinesBySymbol(
         symbol: String,
         interval: String
-    ): Response<List<List<CryptoHistoricalResponse>>> {
-        return coinMarketCapService.getKLinesBySymbol(
+    ): List<KLine> {
+        val response = coinMarketCapService.getKLinesBySymbol(
             url = "https://api.binance.com/api/v3/klines",
             symbol = symbol,
             interval = interval
         )
+
+        return if (response.isSuccessful) {
+            response.body()?.map { convertToKLine(it) } ?: emptyList()
+        } else {
+            throw Exception("Error retrieving klines: ${response.message()}")
+        }
+
     }
+
+    private fun convertToKLine(rawList: List<String>): KLine {
+        return KLine(
+            openTime = rawList[0].toLong(),
+            open = rawList[1].toDouble(),
+            high = rawList[2].toDouble(),
+            low = rawList[3].toDouble(),
+            close = rawList[4].toDouble(),
+            volume = rawList[5].toDouble(),
+            closeTime = rawList[6].toLong(),
+            quoteAssetVolume = rawList[7].toDouble(),
+            numberOfTrades = rawList[8].toInt(),
+            takerBuyBaseAssetVolume = rawList[9].toDouble(),
+            takerBuyQuoteAssetVolume = rawList[10].toDouble(),
+        )
+    }
+
+
 }

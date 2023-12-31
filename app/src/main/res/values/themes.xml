@@ -1,4 +1,0 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <style android:name="Theme.MyApp" android:parent="Theme.MaterialComponents.DayNight.NoActionBar" name="TODO"></style>
-</resources>

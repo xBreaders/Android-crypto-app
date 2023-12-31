@@ -21,6 +21,6 @@ interface CoinMarketCapService {
         @Query("symbol") symbol: String,
         @Query("interval") interval: String,
         @Query("limit") limit: Int = 30,
-    ): Response<List<List<CryptoHistoricalResponse>>>
+    ): Response<List<List<String>>>
 
 }

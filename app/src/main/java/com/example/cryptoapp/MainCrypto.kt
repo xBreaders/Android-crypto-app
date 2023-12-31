@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -98,10 +97,10 @@ fun CryptoListHeader() {
 
 @Composable
 fun AnimatedCryptoItem(crypto: CoinData, onClick: () -> Unit) {
-    var clicked by remember { mutableStateOf(false) }
+    val clicked by remember { mutableStateOf(false) }
     val backgroundColor by animateColorAsState(
         targetValue = if (clicked) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
-        animationSpec = tween(durationMillis = 300)
+        animationSpec = tween(durationMillis = 300), label = ""
     )
 
     ElevatedCard(

@@ -1,8 +1,6 @@
-package com.example.cryptoapp.coin
+//package com.example.cryptoapp.coin
 
-import androidx.compose.runtime.Composable
-
-@Composable
+/*@Composable
 fun SearchCryptoScreen(viewModel: SearchCryptoViewModel = viewModel()) {
     var searchText by remember { mutableStateOf("") }
 
@@ -55,4 +53,4 @@ fun SearchInputField(value: String, onValueChange: (String) -> Unit) {
 @Composable
 fun CryptoItem(crypto: CryptoCurrency) {
     Text(text = "${crypto.symbol} - ${crypto.name}", modifier = Modifier.padding(16.dp))
-}
+}*/
