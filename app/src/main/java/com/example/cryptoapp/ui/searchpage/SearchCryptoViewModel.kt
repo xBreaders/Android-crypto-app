@@ -12,13 +12,26 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
+
+/**
+ * ViewModel for managing and storing UI-related data in the lifecycle of the Search Crypto screen.
+ *
+ * This ViewModel is used to perform search operation over cryptocurrency data and handle the search results.
+ *
+ * @property repository The repository which provides coin data.
+ * @property _searchResults The private mutable state flow for search results, used internally for updating the search results in the ViewModel.
+ * @property searchResults The public state flow representing the search results from the latest search query.
+ * @property isLoading The state flow representing the current loading status of searching for cryptocurrencies.
+ */
 class SearchCryptoViewModel(private val repository: DefaultCoinRepository) : ViewModel() {
 
     private val _searchResults = MutableStateFlow<List<CoinData>>(emptyList())
     val searchResults = _searchResults
     val isLoading = MutableStateFlow(false)
 
-
+    /**
+     * Companion object used to instantiate the ViewModel with specific parameters using a factory method.
+     */
     companion object {
         fun Factory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -31,6 +44,13 @@ class SearchCryptoViewModel(private val repository: DefaultCoinRepository) : Vie
         }
     }
 
+    /**
+     * Performs a search operation over the cryptocurrency data.
+     * Updates the `searchResults` state flow with the search results
+     * and `isLoading` to indicate the end of the search operation.
+     *
+     * @param query Search query
+     */
     fun searchCrypto(query: String) {
         viewModelScope.launch {
             isLoading.value = true

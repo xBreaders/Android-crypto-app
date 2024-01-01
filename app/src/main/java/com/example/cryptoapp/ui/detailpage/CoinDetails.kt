@@ -45,6 +45,23 @@ import androidx.navigation.NavHostController
 import com.example.cryptoapp.persistence.api.CoinData
 import com.example.cryptoapp.ui.detailpage.detailchart.CoinChartComposable
 
+
+/**
+ * Composable function for the a detail screen that displays more information about a certain coin.
+ *
+ * This screen presents detailed information about a selected cryptocurrency including its price,
+ * historical performance in the form of a chart, and other relevant details.
+ *
+ * @param navController The NavHostController that controls navigation in the app.
+ * @param cryptoId The id of the cryptocurrency to be displayed.
+ * @param vm The ViewModel (CoinDetailsViewModel) that provides data for this screen.
+ *
+ * This Screen has the following sub-composables:
+ * `PriceIndicator` - Displays the current price of the given cryptocurrency.
+ * `CryptoDetailCard` - Displays details about the given cryptocurrency.
+ * `DetailItem` - A general-purpose composable used in `CryptoDetailCard` for displaying individual details.
+ * `getColorForChange` - Utility composable to get the color based on the price change.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CryptoDetailScreen(

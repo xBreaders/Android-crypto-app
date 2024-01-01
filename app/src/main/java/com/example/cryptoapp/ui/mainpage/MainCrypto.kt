@@ -34,7 +34,22 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.cryptoapp.persistence.api.CoinData
 import java.text.DecimalFormat
 
-
+/**
+ * `CryptoListScreen` Composable function for rendering the Crypto List Screen in the application.
+ *
+ * This Composable function is intended to represent a list of cryptocurrencies fetched from Coin Data.
+ * Each cryptocurrency within this list is represented by an `AnimatedCryptoItem` Composable.
+ *
+ * Parameters:
+ * @param navController: An instance of `NavHostController` for controlling navigation within the app.
+ * @param viewModel: Instance of `MainCryptoViewModel` (with default provided) for supplying data to this screen.
+ *
+ * Main Components of screen:
+ * `CryptoListHeader` - A Composable for displaying the header of the Crypto List.
+ * `AnimatedCryptoItem` - A Composable that stands as visual representation of each individual cryptocurrency on the list with animation capabilities.
+ * `LoadingItem` - A Composable that serves a loading display when data is being fetched from Coin Data.
+ * `ErrorItem` - A Composable that is displayed when there's an error fetching data.
+ */
 @Composable
 fun CryptoListScreen(
     navController: NavHostController,

@@ -12,12 +12,25 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
+
+/**
+ * ViewModel for managing and storing UI-related data in the lifecycle of the coin details.
+ *
+ * @property repository The repository from which to retrieve coin data.
+ * @property coinId The ID of the coin to fetch and display.
+ *
+ * @property _uiState Private mutable state flow representing UI state. Holds CoinDetailsState objects.
+ * @property uiState Read-only state flow returned to external observers.
+ */
 class CoinDetailsViewModel(private val repository: DefaultCoinRepository, private val coinId: Int) :
     ViewModel() {
     private val _uiState = MutableStateFlow(CoinDetailsState())
     var uiState: StateFlow<CoinDetailsState> = _uiState
 
-
+    /**
+     * Companion object used to instantiate the ViewModel with specific parameters using a factory method.
+     * Provides coinId to the ViewModel.
+     */
     companion object {
         fun Factory(coinId: Int): ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -31,10 +44,18 @@ class CoinDetailsViewModel(private val repository: DefaultCoinRepository, privat
         }
     }
 
+    /**
+     * Method to fetch coin details from the repository and update the UI state accordingly.
+     * @param coinId Unique ID of the coin.
+     */
     init {
         fetchCoinDetails(coinId)
     }
 
+    /**
+     * Method to fetch coin details from the repository and update the UI state accordingly.
+     * @param coinId Unique ID of the coin.
+     */
     private fun fetchCoinDetails(coinId: Int) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -59,25 +80,6 @@ class CoinDetailsViewModel(private val repository: DefaultCoinRepository, privat
             _uiState.value = _uiState.value.copy(isLoading = false)
         }
     }
-
-    /*private fun parseKLine(kLineData: List<Any>): KLine {
-        // Ensure this parsing logic matches the structure of your JSON response
-        // Example:
-        return KLine(
-            openTime = kLineData[0].toString().toDouble().toLong(),
-            open = kLineData[1].toString().toDouble(),
-            high = kLineData[2].toString().toDouble(),
-            low = kLineData[3].toString().toDouble(),
-            close = kLineData[4].toString().toDouble(),
-            volume = kLineData[5].toString().toDouble(),
-            closeTime = kLineData[6].toString().toDouble().toLong(),
-            quoteAssetVolume = kLineData[7].toString().toDouble(),
-            numberOfTrades = kLineData[8] as Double,
-            takerBuyBaseAssetVolume = kLineData[9].toString().toDouble(),
-            takerBuyQuoteAssetVolume = kLineData[10].toString().toDouble()
-        )
-    }*/
-
 }
 
 

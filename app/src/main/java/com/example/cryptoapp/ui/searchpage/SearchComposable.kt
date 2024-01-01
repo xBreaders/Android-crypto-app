@@ -25,6 +25,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cryptoapp.persistence.api.CoinData
 
+/**
+ * Composable function for the Search Crypto Screen.
+ *
+ * This screen provides a search bar for users to search for certain cryptocurrencies by typing in the search field.
+ * The search results are reflected on the screen as the user types.
+ *
+ * @param navController The NavController that manages the navigation in the app.
+ * @param viewModel The ViewModel (SearchCryptoViewModel) that provides data for this screen.
+ *
+ * This Screen has the following sub-composables:
+ * `SearchInputField` - Represents the input field where the user can enter his search query.
+ * `CryptoItem` - Represents each individual cryptocurrency that matches the search criteria.
+ */
 @Composable
 fun SearchCryptoScreen(
     navController: NavController,

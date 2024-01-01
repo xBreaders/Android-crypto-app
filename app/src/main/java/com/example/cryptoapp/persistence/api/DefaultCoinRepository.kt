@@ -164,7 +164,7 @@ class DefaultCoinRepositoryImpl(
         when (val response =
             sharedVM.safeApiCall { coinMarketCapService.requestCoinById(symbol) }) {
             is ApiResponse.Success -> {
-                response.data.data.map { it.asDatabaseEntity() }?.let {
+                response.data.data.map { it.asDatabaseEntity() }.let {
                     upsertCoins(it)
                     return it[0].asDomainObject()
                 }
@@ -192,6 +192,16 @@ class DefaultCoinRepositoryImpl(
         ).flow.map { pagingData -> pagingData.map { it.asDomainObject() } }
     }
 
+    /**
+     * Fetches K-line data for a coin with the given symbol and interval.
+     *
+     * This function uses the Binance API to fetch the KLines data as the CoinMarketCap's API doesn't provide this feature freely.
+     *
+     * @param symbol The symbol of the coin for which to fetch the K-line data.
+     * @param interval The interval of K-line data to fetch.
+     * @return A list of [KLine] objects containing the K-line data for the coin.
+     * @throws Exception if there is an error during the API call.
+     */
     override suspend fun getKLinesBySymbol(
         symbol: String,
         interval: String
@@ -214,6 +224,13 @@ class DefaultCoinRepositoryImpl(
         throw Exception("Error retrieving klines")
     }
 
+    /**
+     * Converts a raw K-line data list to a [KLine] object.
+     *
+     * @param rawList A list of strings containing the raw K-line data.
+     * @return A [KLine] object containing the converted data.
+     * @throws Exception if there is an error during conversion.
+     */
     private fun convertToKLine(rawList: List<String>): KLine {
         return KLine(
             openTime = rawList[0].toLong(),

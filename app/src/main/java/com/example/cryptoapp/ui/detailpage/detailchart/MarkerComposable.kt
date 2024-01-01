@@ -24,6 +24,17 @@ import com.patrykandpatrick.vico.core.context.MeasureContext
 import com.patrykandpatrick.vico.core.extension.copyColor
 import com.patrykandpatrick.vico.core.marker.Marker
 
+/**
+ * A Composable function that creates a `Marker` instance using the Vico charting library.
+ *
+ * The function uses the `MaterialTheme` data for styling the marker.
+ * The `Marker` object created here is used to display datapoint values on the chart.
+ *
+ * As the `@Composable` functions may be called more than once throughout an application's lifecycle,
+ * the function uses `remember` to prevent the recreation of complex objects like `Marker`, optimizing performance.
+ *
+ * @return A `Marker` instance to be used throughout the lifecycle of the containing Composable.
+ */
 @Composable
 internal fun rememberMarker(): Marker {
     val labelBackgroundColor = MaterialTheme.colorScheme.surface

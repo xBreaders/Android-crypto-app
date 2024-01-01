@@ -10,9 +10,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 /**
- * An interceptor for appending the API key to requests made through OkHttpClient.
+ * The `ApiKeyInterceptor` class is a custom defined interceptor to append the API key to requests that are made with the OkHttpClient.
+ * The API key is required by the web service to authenticate requests originating from this application.
  *
- * @property apiKey The API key for accessing the web service.
+ * @constructor takes an API key as a parameter which is a String and uses it to create an instance of the class.
+ *
+ * @property apiKey String value used for accessing the web service. It is passed when creating a new instance of the class.
+ *
+ * The class implements the `Interceptor` interface and overrides the `intercept` function.
+ *
+ * The `intercept` function intercepts the outgoing request and adds the API key in its header. It does so by obtaining the original request from
+ * the chain, building a new request with an additional API key header, and continuing the chain call with this new request.
+ * Finally, it returns the response received from the chain.
+ *
+ * @param chain The chain of request/response interactions. It allows us to retrieve the original request and use it's builder to add a header.
+ *
+ * @function intercept Implement this function to add API key to every request's header before it is sent to the server.
  */
 class ApiKeyInterceptor(private val apiKey: String) : Interceptor {
 
@@ -33,8 +46,12 @@ class ApiKeyInterceptor(private val apiKey: String) : Interceptor {
 
 
 /**
- * Defines the container for the application's dependencies.
- * This interface is used for dependency injection.
+ * `AppContainer` is the interface that defines the application's dependencies container for Dependency Injection purposes.
+ * This is where we inject all the dependencies required by the application which promotes loose coupling and easier unit
+ * testing. It acts as the central part of the Dependency Injection system.
+ *
+ * @property repository An instance of DefaultCoinRepository. This is your way to access the functionality
+ * provided by the data layer, i.e., fetching, storing, and managing cryptocurrency data.
  */
 interface AppContainer {
 

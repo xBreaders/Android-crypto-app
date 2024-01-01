@@ -34,7 +34,13 @@ import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
 
-
+/**
+ * Composable function to display a chart for a given list of `KLine` data points.
+ *
+ * This composable is responsible for creating the chart model producer, setting up the chart style, configuring chart's y-axis and rendering the chart.
+ *
+ * @param klines The list of KLine objects representing the cryptocurrency data points to be plotted on the chart.
+ */
 @Composable
 fun CoinChartComposable(klines: List<KLine>) {
     ProvideChartStyle(

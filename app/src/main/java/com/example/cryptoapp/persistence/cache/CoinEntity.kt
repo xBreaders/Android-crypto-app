@@ -7,6 +7,21 @@ import androidx.room.PrimaryKey
 import com.example.cryptoapp.persistence.api.CoinData
 import com.example.cryptoapp.persistence.api.CryptoQuote
 
+/**
+ * Data class representing a coin entity in the database.
+ *
+ * Each instance represents a row in a database table.
+ * This class also defines the table's name "cryptocurrencies" and its columns.
+ *
+ * @property id The primary key. It is a unique identifier for a coin.
+ * @property name The name of the coin.
+ * @property symbol The symbol of the coin.
+ * @property rank The rank of the coin in cryptocurrencies.
+ * @property price The price of the coin.
+ * @property percentChange24h The percentage change in the last 24 hours.
+ * @property marketCap The market capitalization of the coin.
+ * @property coinDetails The embedded object that holds the details of a coin.
+ */
 @Entity(tableName = "cryptocurrencies")
 data class CoinEntity(
     @PrimaryKey val id: Int,
@@ -28,31 +43,17 @@ data class CoinEntity(
     // val historical : HistoricalDataEntity
 )
 
-
+/**
+ * Method to map the database object to the domain object with all coin details.
+ *
+ * @return [CoinData] Domain object with all details of the coin.
+ */
 fun CoinEntity.asDetailedDomainObject(): CoinData {
     return CoinData(
         id = id,
         name = name,
         symbol = symbol,
         cmc_rank = rank,
-
-        //data class CoinData(
-        //    val id: Int = 0,
-        //    val name: String = "",
-        //    val symbol: String = "",
-        //    val slug: String = "",
-        //    val cmc_rank: Int = 0,
-        //    val num_market_pairs: Int = 0,
-        //    val circulating_supply: Double = 0.0,
-        //    val total_supply: Double = 0.0,
-        //    val max_supply: Double? = null,
-        //    val infinite_supply: Boolean = false,
-        //    val last_updated: String = "",
-        //    val date_added: String = "",
-        //    val tags: List<String> = listOf(),
-        //    @SerializedName("quote")
-        //    val quote: Map<String, CryptoQuote> = mapOf()
-        //)
         slug = coinDetails.slug,
         circulating_supply = coinDetails.circulatingSupply,
         total_supply = coinDetails.totalSupply,
@@ -71,20 +72,16 @@ fun CoinEntity.asDetailedDomainObject(): CoinData {
                 market_cap_dominance = coinDetails.marketCapDominance,
                 last_updated = coinDetails.quoteLastUpdated,
                 volume_24h = coinDetails.volume,
-                //data class CryptoQuote(
-                //    val price: Double = 0.0,
-                //    val volume_24h: Double = 0.0,
-                //    val volume_change_24h: Double = 0.0,
-                //    val market_cap: Double = 0.0,
-                //    val fully_diluted_market_cap: Double = 0.0,
-                //    val market_cap_dominance: Double = 0.0,
-                //    val last_updated: String = ""
-                //)
             )
         ),
     )
 }
 
+/**
+ * Method to map the database object to the domain object with only the essential details.
+ *
+ * @return [CoinData] Domain object with essential details of the coin.
+ */
 fun CoinEntity.asDomainObject(): CoinData {
     return CoinData(
         id = id,
@@ -100,6 +97,11 @@ fun CoinEntity.asDomainObject(): CoinData {
     )
 }
 
+/**
+ * Method to map a list of database objects to the domain object with only the essential details.
+ *
+ * @return [List<CoinData>] list of Domain objects with essential details of the coin.
+ */
 fun List<CoinEntity>.asDomainObject(): List<CoinData> {
     return map {
         it.asDomainObject()

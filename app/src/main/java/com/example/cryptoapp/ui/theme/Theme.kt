@@ -5,7 +5,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-
+/**
+ * [lightColorScheme] for the light theme of the application.
+ */
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
@@ -38,7 +40,9 @@ private val LightColors = lightColorScheme(
     scrim = md_theme_light_scrim,
 )
 
-
+/**
+ * [darkColorScheme] for the dark theme of the application.
+ */
 private val DarkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
@@ -71,6 +75,18 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+/**
+ * Main theme for the CryptoApp.
+ *
+ * This theme can be set to either light or dark mode.
+ * In dark mode, [DarkColors] will be applied to the app.
+ * In light mode, [LightColors] will be applied.
+ * The mode can be set manually by supplying [darkTheme] parameter. If not supplied,
+ * the theme will automatically match the system's dark/light setting.
+ *
+ * @param darkTheme Boolean flag indicating whether to use dark theme or light theme. Defaults to system's setting when not supplied.
+ * @param content @Composable that will be receiving the theme and all of its stylings.
+ */
 @Composable
 fun CryptoAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

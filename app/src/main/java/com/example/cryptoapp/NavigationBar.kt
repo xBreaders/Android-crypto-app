@@ -29,7 +29,14 @@ import com.example.cryptoapp.ui.detailpage.CryptoDetailScreen
 import com.example.cryptoapp.ui.mainpage.CryptoListScreen
 import com.example.cryptoapp.ui.searchpage.SearchCryptoScreen
 
-
+/**
+ * Composable function to set up the main screen of the Crypto App with a bottom navigation bar.
+ *
+ * All top-level destinations are supposed to be added here.
+ *
+ * @param navController The NavController which controls the navigation within Compose.
+ * @param sharedVM The SharedViewModel which holds shared data across multiple composables.
+ */
 @Composable
 fun MainScreen(navController: NavHostController, sharedVM: SharedViewModel) {
     val items = listOf(
@@ -76,6 +83,14 @@ fun MainScreen(navController: NavHostController, sharedVM: SharedViewModel) {
     }
 }
 
+/**
+ * Composable function to set up the bottom navigation bar.
+ *
+ * All top-level destinations that needs to be included in bottom navigation should be passed as `items`.
+ *
+ * @param items A list of items representing the top-level destinations.
+ * @param navController The NavController which controls the navigation within Composable.
+ */
 @Composable
 fun BottomNavigationBar(items: List<Screen>, navController: NavHostController) {
     NavigationBar {
@@ -96,6 +111,14 @@ fun BottomNavigationBar(items: List<Screen>, navController: NavHostController) {
     }
 }
 
+/**
+ * Sealed class to represent a screen.
+ * Each object represents a top-level screen in our navigation hierarchy.
+ *
+ * @property route The unique route for a screen. It used as destination path in Composable methods.
+ * @property icon The icon to represent the screen in components like Bottom Navigation, Drawer, etc.
+ * @property label The label that describes this screen.
+ */
 sealed class Screen(val route: String, val icon: ImageVector, val label: String) {
     data object Main : Screen("overview", Icons.Filled.Home, "Overview")
     data object Search : Screen("Search", Icons.Filled.Search, "Search")
