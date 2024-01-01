@@ -51,7 +51,8 @@ interface AppContainer {
  *
  * @property context The application context used for database and network setup.
  */
-class DefaultApp(private val context: Context) : AppContainer {
+class DefaultApp(private val context: Context, private val sharedVM: SharedViewModel) :
+    AppContainer {
 
     private val baseUrl = "https://pro-api.coinmarketcap.com/"
 
@@ -85,7 +86,8 @@ class DefaultApp(private val context: Context) : AppContainer {
     override val repository: DefaultCoinRepository by lazy {
         DefaultCoinRepositoryImpl(
             retrofitService,
-            CoinDatabase.getDatabase(context = context).coinDao()
+            CoinDatabase.getDatabase(context = context).coinDao(),
+            sharedVM
         )
     }
 }

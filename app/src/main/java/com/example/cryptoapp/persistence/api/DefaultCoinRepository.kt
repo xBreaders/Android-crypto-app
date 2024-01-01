@@ -23,7 +23,7 @@ interface DefaultCoinRepository {
      * @return [Response] containing [CryptoResponse].
      * @throws Exception if there is a network or server error.
      */
-    suspend fun getCryptoListings(): Response<CryptoResponse>
+    suspend fun getCryptoListings(): CryptoResponse
 
     /**
      * Retrieves details of a specific coin by its ID.
@@ -74,17 +74,30 @@ interface DefaultCoinRepository {
  */
 class DefaultCoinRepositoryImpl(
     private val coinMarketCapService: CoinMarketCapService,
-    private val coinDao: CoinDao
+    private val coinDao: CoinDao,
+    private val sharedVM: SharedViewModel
 ) :
     DefaultCoinRepository {
+
+
     /**
      * Retrieves a list of cryptocurrencies from the remote service.
      * @return [Response] containing [CryptoResponse].
      * @throws SQLException if there is a database access error.
      * @throws Exception for other errors.
      */
-    override suspend fun getCryptoListings(): Response<CryptoResponse> {
-        return coinMarketCapService.getCryptoListings()
+    override suspend fun getCryptoListings(): CryptoResponse {
+        val response = sharedVM.safeApiCall { coinMarketCapService.getCryptoListings() }
+        when (response) {
+            is ApiResponse.Success -> {
+                return response.data
+            }
+
+            is ApiResponse.Error -> {
+                sharedVM.triggerError(response.errorMessage)
+            }
+        }
+        throw Exception("Error retrieving coin list from database:")
     }
 
     /**
@@ -148,15 +161,20 @@ class DefaultCoinRepositoryImpl(
     }
 
     override suspend fun requestCoinBySymbol(symbol: String): CoinData {
+        when (val response =
+            sharedVM.safeApiCall { coinMarketCapService.requestCoinById(symbol) }) {
+            is ApiResponse.Success -> {
+                response.data.data.map { it.asDatabaseEntity() }?.let {
+                    upsertCoins(it)
+                    return it[0].asDomainObject()
+                }
+            }
 
-        val response = coinMarketCapService.requestCoinById(symbol)
-        if (response.isSuccessful) {
-            response.body()?.data?.map { it.asDatabaseEntity() }?.let {
-                upsertCoins(it)
-                return it[0].asDomainObject()
+            is ApiResponse.Error -> {
+                sharedVM.triggerError(response.errorMessage)
             }
         }
-        throw Exception("Error retrieving coin from database: ${response.message()}")
+        throw Exception("Error retrieving coin by symbol from database:")
     }
 
     /**
@@ -178,18 +196,22 @@ class DefaultCoinRepositoryImpl(
         symbol: String,
         interval: String
     ): List<KLine> {
-        val response = coinMarketCapService.getKLinesBySymbol(
-            url = "https://api.binance.com/api/v3/klines",
-            symbol = symbol,
-            interval = interval
-        )
+        when (val response = sharedVM.safeApiCall {
+            coinMarketCapService.getKLinesBySymbol(
+                url = "https://api.binance.com/api/v3/klines",
+                symbol = symbol,
+                interval = interval
+            )
+        }) {
+            is ApiResponse.Success -> {
+                return response.data.map { convertToKLine(it) }
+            }
 
-        return if (response.isSuccessful) {
-            response.body()?.map { convertToKLine(it) } ?: emptyList()
-        } else {
-            throw Exception("Error retrieving klines: ${response.message()}")
+            is ApiResponse.Error -> {
+                sharedVM.triggerError(response.errorMessage)
+            }
         }
-
+        throw Exception("Error retrieving klines")
     }
 
     private fun convertToKLine(rawList: List<String>): KLine {
@@ -207,6 +229,9 @@ class DefaultCoinRepositoryImpl(
             takerBuyQuoteAssetVolume = rawList[10].toDouble(),
         )
     }
+}
 
-
+sealed class ApiResponse<T> {
+    class Success<T>(val data: T) : ApiResponse<T>()
+    class Error<T>(val errorMessage: String, val errorCode: Int? = null) : ApiResponse<T>()
 }

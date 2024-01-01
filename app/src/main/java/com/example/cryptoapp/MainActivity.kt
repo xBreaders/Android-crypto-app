@@ -15,7 +15,10 @@ class MainActivity : ComponentActivity() {
             CryptoAppTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
-                    MainScreen(navController = navController)
+                    MainScreen(
+                        navController = navController,
+                        sharedVM = (application as CoinApp).sharedVM
+                    )
                 }
             }
         }
