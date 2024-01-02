@@ -73,8 +73,11 @@ data class CryptoQuote(
     val volume_24h: Double = 0.0,
     val volume_change_24h: Double = 0.0,
     val percent_change_24h: Double = 0.0,
+    val market_cap: Double = 0.0,
+    val fully_diluted_market_cap: Double = 0.0,
+    val market_cap_dominance: Double = 0.0,
+    val last_updated: String = ""
 )
-
 /**
  *
  * Extension function on [CoinData] data class that converts it to [CoinEntity] object.
