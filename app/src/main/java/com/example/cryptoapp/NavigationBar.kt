@@ -140,6 +140,7 @@ fun BottomNavigationBar(items: List<Screen>, navController: NavHostController) {
 }
 
 
+
 @Composable
 fun NavigationRail(items: List<Screen>, navController: NavHostController) {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route

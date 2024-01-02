@@ -1,5 +1,9 @@
 package com.example.cryptoapp
 
+import android.app.Activity
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -18,11 +22,17 @@ class NavigationTests {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     @Before
     fun setUp() {
         composeTestRule.setContent {
+            val context = LocalContext.current
             val navController = rememberNavController()
-            MainScreen(navController, SharedViewModel())
+            MainScreen(
+                navController, SharedViewModel(), windowSizeClass = calculateWindowSizeClass(
+                    (context as? Activity)!!
+                )
+            )
         }
     }
 

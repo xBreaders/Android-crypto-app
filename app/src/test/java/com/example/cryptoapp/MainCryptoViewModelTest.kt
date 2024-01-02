@@ -1,0 +1,79 @@
+package com.example.cryptoapp
+
+import android.app.Application
+import android.content.Context
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.paging.PagingData
+import androidx.test.core.app.ApplicationProvider
+import androidx.work.Configuration
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.testing.WorkManagerTestInitHelper
+import com.example.cryptoapp.persistence.api.DefaultCoinRepository
+import com.example.cryptoapp.ui.mainpage.MainCryptoViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
+import org.robolectric.RobolectricTestRunner
+
+@RunWith(RobolectricTestRunner::class)
+@ExperimentalCoroutinesApi
+class MainCryptoViewModelTest {
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
+
+    @Mock
+    private lateinit var mockRepository: DefaultCoinRepository
+
+    @Mock
+    private lateinit var context: Context
+
+    private lateinit var viewModel: MainCryptoViewModel
+
+    @Before
+    fun setUp() {
+        MockitoAnnotations.openMocks(this)
+        context = ApplicationProvider.getApplicationContext()
+
+        val config = Configuration.Builder()
+            .setMinimumLoggingLevel(android.util.Log.DEBUG)
+            .build()
+
+        WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
+    }
+
+
+    @Test
+    fun `scheduleAndObserveWorker schedules work correctly`() {
+        Mockito.`when`(mockRepository.getPagedCoins()).thenReturn(
+
+            flowOf(PagingData.empty())
+        )
+
+
+        viewModel = MainCryptoViewModel(mockRepository, context.applicationContext as Application)
+
+
+        val workManager = WorkManager.getInstance(ApplicationProvider.getApplicationContext())
+
+
+        val workInfos = workManager.getWorkInfosForUniqueWork("crypto-sync").get()
+
+
+        assertTrue(workInfos.isNotEmpty())
+
+
+        val workInfo = workInfos[0]
+        assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
+    }
+}

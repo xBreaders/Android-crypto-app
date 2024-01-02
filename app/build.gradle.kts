@@ -53,6 +53,11 @@ android {
     subprojects {
         apply(plugin = "org.jetbrains.dokka")
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 
 }
 
@@ -72,6 +77,7 @@ dependencies {
     implementation("androidx.test:runner:1.5.2")
     implementation("androidx.navigation:navigation-testing:2.7.6")
     implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
+    implementation("androidx.work:work-testing:2.9.0")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -104,5 +110,10 @@ dependencies {
     implementation("com.patrykandpatrick.vico:compose-m3:2.0.0-alpha.5")
     implementation("com.patrykandpatrick.vico:core:2.0.0-alpha.5")
     implementation("com.patrykandpatrick.vico:views:2.0.0-alpha.5")
+    //testing
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:5.3.1")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("org.robolectric:robolectric:4.11.1")
 }
