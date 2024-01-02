@@ -1,6 +1,5 @@
 package com.example.cryptoapp
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -9,6 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -19,7 +19,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -47,7 +49,17 @@ fun MainScreen(navController: NavHostController, sharedVM: SharedViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState,
+                modifier = Modifier.padding(8.dp),
+                snackbar = { snackbarData ->
+                    Snackbar(
+                        snackbarData = snackbarData,
+                        containerColor = Color.Red,
+                        contentColor = Color.White
+                    )
+                })
+        },
         bottomBar = { BottomNavigationBar(items, navController) }
     ) { innerPadding ->
         NavHost(
@@ -66,20 +78,16 @@ fun MainScreen(navController: NavHostController, sharedVM: SharedViewModel) {
                     cryptoId = cryptoId,
                 )
             }
-            // Add composable for other screens if necessary
         }
-        Box {
-            errorMessage?.let { message ->
-                LaunchedEffect(key1 = message) {
-                    snackbarHostState.showSnackbar(
-                        message = message,
-                        duration = SnackbarDuration.Short
-                    )
-                    sharedVM.clearError()
-                }
+        errorMessage?.let { message ->
+            LaunchedEffect(key1 = message) {
+                snackbarHostState.showSnackbar(
+                    message = message,
+                    duration = SnackbarDuration.Short
+                )
+                sharedVM.clearError()
             }
         }
-
     }
 }
 

@@ -78,10 +78,10 @@ fun SearchInputField(value: String, onValueChange: (String) -> Unit, onSearchCli
         TextField(
             value = value,
             onValueChange = onValueChange,
-            label = { Text("Search Crypto") },
+            placeholder = { Text("Search Crypto") },
             modifier = Modifier
                 .fillMaxWidth(0.75f)
-                .padding(16.dp)
+                .padding(16.dp),
         )
         Button(
             onClick = onSearchClick,

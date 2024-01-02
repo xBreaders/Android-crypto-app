@@ -68,6 +68,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-android:1.5.4")
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
+    implementation("androidx.test:runner:1.5.2")
+    implementation("androidx.navigation:navigation-testing:2.7.6")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -100,4 +103,5 @@ dependencies {
     implementation("com.patrykandpatrick.vico:compose-m3:2.0.0-alpha.5")
     implementation("com.patrykandpatrick.vico:core:2.0.0-alpha.5")
     implementation("com.patrykandpatrick.vico:views:2.0.0-alpha.5")
+    testImplementation("junit:junit:4.13.2")
 }

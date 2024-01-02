@@ -76,7 +76,7 @@ fun CryptoDetailScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    if (!uiState.isLoading && uiState.coinDetails != null) {
+                    if (!uiState.isLoading) {
                         Text(uiState.coinDetails!!.symbol, fontWeight = FontWeight.Bold)
                     } else {
                         Text("Loading...", fontWeight = FontWeight.Bold)
@@ -104,7 +104,7 @@ fun CryptoDetailScreen(
                 .padding(horizontal = 14.dp, vertical = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (!uiState.isLoading && uiState.coinDetails != null) {
+            if (!uiState.isLoading) {
                 PriceIndicator(uiState.coinDetails!!)
             }
             Row(

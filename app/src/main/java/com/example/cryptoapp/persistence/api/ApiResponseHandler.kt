@@ -1,6 +1,7 @@
 package com.example.cryptoapp.persistence.api
 
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -55,9 +56,10 @@ class SharedViewModel : ViewModel() {
                 ApiResponse.Success(response.body()!!)
             } else {
                 val errorResponse = response.errorBody()?.string()
+                val apiError = Gson().fromJson(errorResponse, ApiErrorResponse::class.java)
                 ApiResponse.Error(
-                    errorMessage = errorResponse ?: "Unknown error occurred",
-                    errorCode = response.code()
+                    errorMessage = "Error ${apiError.status.error_code}: ${apiError.status.error_message}",
+                    errorCode = apiError.status.error_code
                 )
             }
         } catch (e: Exception) {
