@@ -71,6 +71,7 @@ dependencies {
     implementation("androidx.test.ext:junit-ktx:1.1.5")
     implementation("androidx.test:runner:1.5.2")
     implementation("androidx.navigation:navigation-testing:2.7.6")
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")

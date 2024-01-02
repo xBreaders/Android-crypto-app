@@ -1,5 +1,7 @@
 package com.example.cryptoapp
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -7,12 +9,15 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,12 +44,14 @@ import com.example.cryptoapp.ui.searchpage.SearchCryptoScreen
  * @param navController The NavController which controls the navigation within Compose.
  * @param sharedVM The SharedViewModel which holds shared data across multiple composables.
  */
+
 @Composable
-fun MainScreen(navController: NavHostController, sharedVM: SharedViewModel) {
-    val items = listOf(
-        Screen.Main,
-        Screen.Search,
-    )
+fun MainScreen(
+    navController: NavHostController,
+    sharedVM: SharedViewModel,
+    windowSizeClass: WindowSizeClass
+) {
+    val routes = listOf(Screen.Main, Screen.Search)
     val errorMessage by sharedVM.errorMessage.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -60,25 +67,37 @@ fun MainScreen(navController: NavHostController, sharedVM: SharedViewModel) {
                     )
                 })
         },
-        bottomBar = { BottomNavigationBar(items, navController) }
-    ) { innerPadding ->
-        NavHost(
-            navController,
-            startDestination = Screen.Main.route,
-            Modifier.padding(innerPadding)
-        ) {
-            composable(Screen.Main.route) { CryptoListScreen(navController) }
-            composable(Screen.Search.route) { SearchCryptoScreen(navController) }
-            composable("cryptoDetail/{cryptoId}") { backStackEntry ->
-                val cryptoIdStr = backStackEntry.arguments?.getString("cryptoId") ?: "1"
-                val cryptoId = cryptoIdStr.toIntOrNull() ?: 1
-
-                CryptoDetailScreen(
-                    navController,
-                    cryptoId = cryptoId,
-                )
+        bottomBar = {
+            if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+                BottomNavigationBar(routes, navController)
             }
         }
+    ) { innerPadding ->
+        Row(Modifier.padding(innerPadding)) {
+            if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
+                NavigationRail(routes, navController)
+            }
+            NavHost(
+                navController,
+                startDestination = Screen.Main.route,
+                modifier = Modifier.fillMaxSize() // Add padding when NavigationRail is visible
+            ) {
+                composable(Screen.Main.route) { CryptoListScreen(navController) }
+                composable(Screen.Search.route) { SearchCryptoScreen(navController) }
+                composable("cryptoDetail/{cryptoId}") { backStackEntry ->
+                    val cryptoIdStr = backStackEntry.arguments?.getString("cryptoId") ?: "1"
+                    val cryptoId = cryptoIdStr.toIntOrNull() ?: 1
+
+                    CryptoDetailScreen(
+                        navController,
+                        cryptoId = cryptoId,
+                    )
+                }
+            }
+            //  }
+        }
+
+
         errorMessage?.let { message ->
             LaunchedEffect(key1 = message) {
                 snackbarHostState.showSnackbar(
@@ -90,6 +109,7 @@ fun MainScreen(navController: NavHostController, sharedVM: SharedViewModel) {
         }
     }
 }
+
 
 /**
  * Composable function to set up the bottom navigation bar.
@@ -105,6 +125,27 @@ fun BottomNavigationBar(items: List<Screen>, navController: NavHostController) {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         items.forEach { screen ->
             NavigationBarItem(
+                icon = { Icon(screen.icon, contentDescription = null) },
+                label = { Text(screen.label) },
+                selected = currentRoute == screen.route,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+    }
+}
+
+
+@Composable
+fun NavigationRail(items: List<Screen>, navController: NavHostController) {
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+    androidx.compose.material3.NavigationRail {
+        items.forEach { screen ->
+            NavigationRailItem(
                 icon = { Icon(screen.icon, contentDescription = null) },
                 label = { Text(screen.label) },
                 selected = currentRoute == screen.route,

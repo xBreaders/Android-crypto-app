@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.navigation.compose.rememberNavController
 import com.example.cryptoapp.ui.theme.CryptoAppTheme
 /**
@@ -15,15 +17,18 @@ import com.example.cryptoapp.ui.theme.CryptoAppTheme
  *
  */
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             CryptoAppTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
+                    val windowSizeClass = calculateWindowSizeClass(this)
                     MainScreen(
                         navController = navController,
-                        sharedVM = (application as CoinApp).sharedVM
+                        sharedVM = (application as CoinApp).sharedVM,
+                        windowSizeClass = windowSizeClass
                     )
                 }
             }
