@@ -60,18 +60,13 @@ class MainCryptoViewModelTest {
             flowOf(PagingData.empty())
         )
 
-
         viewModel = MainCryptoViewModel(mockRepository, context.applicationContext as Application)
-
 
         val workManager = WorkManager.getInstance(ApplicationProvider.getApplicationContext())
 
-
         val workInfos = workManager.getWorkInfosForUniqueWork("crypto-sync").get()
 
-
         assertTrue(workInfos.isNotEmpty())
-
 
         val workInfo = workInfos[0]
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.cryptoapp.CoinApp
-import com.example.cryptoapp.persistence.api.asDatabaseEntity
+import com.example.cryptoapp.persistence.api.response.asDatabaseEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

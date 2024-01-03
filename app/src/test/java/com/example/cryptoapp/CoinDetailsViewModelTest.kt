@@ -3,9 +3,9 @@ package com.example.cryptoapp
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.cryptoapp.persistence.api.CoinData
-import com.example.cryptoapp.persistence.api.CryptoQuote
 import com.example.cryptoapp.persistence.api.DefaultCoinRepository
+import com.example.cryptoapp.persistence.api.response.CoinData
+import com.example.cryptoapp.persistence.api.response.CryptoQuote
 import com.example.cryptoapp.ui.detailpage.CoinDetailsState
 import com.example.cryptoapp.ui.detailpage.CoinDetailsViewModel
 import kotlinx.coroutines.Dispatchers

@@ -31,7 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.cryptoapp.persistence.api.CoinData
+import com.example.cryptoapp.persistence.api.response.CoinData
 import java.text.DecimalFormat
 
 /**

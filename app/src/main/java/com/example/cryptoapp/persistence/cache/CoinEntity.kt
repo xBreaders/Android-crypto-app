@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.cryptoapp.persistence.api.CoinData
-import com.example.cryptoapp.persistence.api.CryptoQuote
+import com.example.cryptoapp.persistence.api.response.CoinData
+import com.example.cryptoapp.persistence.api.response.CryptoQuote
 
 /**
  * Data class representing a coin entity in the database.
@@ -39,8 +39,6 @@ data class CoinEntity(
     val marketCap: Double,
     @Embedded(prefix = "details_")
     val coinDetails: CoinDetailsEntity,
-    //   @Embedded(prefix = "historical_")
-    // val historical : HistoricalDataEntity
 )
 
 /**

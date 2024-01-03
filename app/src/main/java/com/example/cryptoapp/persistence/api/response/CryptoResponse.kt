@@ -1,4 +1,4 @@
-package com.example.cryptoapp.persistence.api
+package com.example.cryptoapp.persistence.api.response
 
 import com.example.cryptoapp.persistence.cache.CoinDetailsEntity
 import com.example.cryptoapp.persistence.cache.CoinEntity

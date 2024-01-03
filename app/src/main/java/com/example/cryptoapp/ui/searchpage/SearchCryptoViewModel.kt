@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.cryptoapp.CoinApp
-import com.example.cryptoapp.persistence.api.CoinData
 import com.example.cryptoapp.persistence.api.DefaultCoinRepository
+import com.example.cryptoapp.persistence.api.response.CoinData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -62,9 +62,11 @@ class SearchCryptoViewModel(private val repository: DefaultCoinRepository) : Vie
                 try {
                     searchQuery = listOf(repository.requestCoinBySymbol(query))
                     _searchResults.value = searchQuery
+                    isLoading.value = false
                 } catch (e: Exception) {
                     searchQuery = emptyList()
                     _searchResults.value = searchQuery
+                    isLoading.value = false
                 }
             }
             isLoading.value = false

@@ -1,6 +1,7 @@
 package com.example.cryptoapp.persistence.api
 
 import androidx.lifecycle.ViewModel
+import com.example.cryptoapp.persistence.api.response.ApiErrorResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

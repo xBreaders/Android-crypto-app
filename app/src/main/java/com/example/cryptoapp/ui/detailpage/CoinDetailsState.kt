@@ -1,7 +1,7 @@
 package com.example.cryptoapp.ui.detailpage
 
-import com.example.cryptoapp.persistence.api.CoinData
-import com.example.cryptoapp.persistence.api.KLine
+import com.example.cryptoapp.persistence.api.response.CoinData
+import com.example.cryptoapp.persistence.api.response.KLine
 
 /**
  * Data class representing the state of a coin details within the application.

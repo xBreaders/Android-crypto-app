@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.cryptoapp.persistence.api.KLine
+import com.example.cryptoapp.persistence.api.response.KLine
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
 import com.patrykandpatrick.vico.compose.chart.layer.lineSpec

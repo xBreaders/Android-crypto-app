@@ -4,6 +4,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.example.cryptoapp.persistence.api.response.CoinData
+import com.example.cryptoapp.persistence.api.response.CryptoResponse
+import com.example.cryptoapp.persistence.api.response.KLine
+import com.example.cryptoapp.persistence.api.response.asDatabaseEntity
 import com.example.cryptoapp.persistence.cache.CoinDao
 import com.example.cryptoapp.persistence.cache.CoinEntity
 import com.example.cryptoapp.persistence.cache.asDetailedDomainObject

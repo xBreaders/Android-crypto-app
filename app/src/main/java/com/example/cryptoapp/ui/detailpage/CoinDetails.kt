@@ -42,7 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.cryptoapp.persistence.api.CoinData
+import com.example.cryptoapp.persistence.api.response.CoinData
 import com.example.cryptoapp.ui.detailpage.detailchart.CoinChartComposable
 
 

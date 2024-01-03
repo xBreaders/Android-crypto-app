@@ -1,4 +1,4 @@
-package com.example.cryptoapp.persistence.api
+package com.example.cryptoapp.persistence.api.response
 
 data class ApiErrorResponse(
     val status: Status

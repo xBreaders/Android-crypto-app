@@ -1,4 +1,4 @@
-package com.example.cryptoapp.persistence.api
+package com.example.cryptoapp.persistence.api.response
 
 /**
  * Data class representing a Kline or candlestick object for a specific timeframe.
