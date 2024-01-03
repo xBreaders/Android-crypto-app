@@ -21,7 +21,6 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -31,30 +30,27 @@ jobs:
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
 
-    # New step: Copy gradlew and set permissions
-    - name: Ensure gradlew is executable
-      run: |
-        cp gradlew gradlew_copy
-        chmod +x gradlew_copy
+    # New step: Ensure gradlew has correct permissions
+    - name: Set executable permissions for gradlew
+      run: chmod +x gradlew
 
-    # Update this step to use the copied gradlew file
     - name: Build and run tests
       id: build
       run: |
-        if ! ./gradlew_copy build; then
+        if ! ./gradlew build; then
+          # Address a rare unit test failure very likely to be a test-harness-related
+          # race condition.
           echo "Build failed, retrying once"
-          if ! ./gradlew_copy build; then
+          if ! ./gradlew build; then
             exit 1
           fi
         fi
-
-    # Ensure all other steps that use gradlew are updated to use gradlew_copy
     - name: Generate API documentation
       if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request' }}
       run: |
         VERSION=$(git tag --sort=committerdate | tail -1)
         echo Generating API documentation for version $VERSION
-        ./gradlew_copy -Pversion=$VERSION dokkaHtml
+        ./gradlew -Pversion=$VERSION dokkaHtml
 
     - name: Deploy API documentation to Github Pages
       if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request' }}
