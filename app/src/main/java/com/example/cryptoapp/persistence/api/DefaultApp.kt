@@ -19,11 +19,6 @@ import retrofit2.converter.gson.GsonConverterFactory
  *
  * The class implements the `Interceptor` interface and overrides the `intercept` function.
  *
- * The `intercept` function intercepts the outgoing request and adds the API key in its header. It does so by obtaining the original request from
- * the chain, building a new request with an additional API key header, and continuing the chain call with this new request.
- * Finally, it returns the response received from the chain.
- *
- * @param chain The chain of request/response interactions. It allows us to retrieve the original request and use it's builder to add a header.
  *
  * @function intercept Implement this function to add API key to every request's header before it is sent to the server.
  */

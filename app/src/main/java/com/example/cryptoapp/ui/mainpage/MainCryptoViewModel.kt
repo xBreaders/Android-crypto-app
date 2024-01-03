@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
  * This ViewModel is used to fetch, cache, and display a list of cryptocurrencies.
  *
  * @property repository The repository which provides coin data.
- * @property application The Android Application reference, required for WorkManager.
+ * @property Application The Android Application reference, required for WorkManager.
  * @property pagedCoins Cached LiveData of paged coins from the repository.
  * @property workManager WorkManager instance to manage Android WorkRequests.
  */

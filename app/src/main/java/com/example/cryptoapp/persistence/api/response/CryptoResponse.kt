@@ -37,7 +37,7 @@ data class CryptoResponse(
  * @property tags List of tags associated with the coin.
  * @property quote Map of quotes for the coin for each currency.
  */
-data class CoinData(
+data class CoinData( //NAMING CONVENTIONS WITH UNDERSCORES FOR AUTOMATIC SERIALIZATION
     val id: Int = 0,
     val name: String = "",
     val symbol: String = "",
@@ -68,7 +68,7 @@ data class CoinData(
  * @property market_cap_dominance Market Capitalization dominance of the coin.
  * @property last_updated Last updated time of the data.
  */
-data class CryptoQuote(
+data class CryptoQuote( //NAMING CONVENTIONS WITH UNDERSCORES FOR AUTOMATIC SERIALIZATION
     val price: Double = 0.0,
     val volume_24h: Double = 0.0,
     val volume_change_24h: Double = 0.0,

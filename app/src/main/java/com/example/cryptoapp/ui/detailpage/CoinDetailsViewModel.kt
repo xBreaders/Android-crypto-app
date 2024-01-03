@@ -1,5 +1,6 @@
 package com.example.cryptoapp.ui.detailpage
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -26,10 +27,10 @@ import kotlinx.coroutines.launch
  * @property _uiState Private mutable state flow representing UI state. Holds CoinDetailsState objects.
  * @property uiState Read-only state flow returned to external observers.
  */
-class CoinDetailsViewModel(
+class CoinDetailsViewModel @SuppressLint("StaticFieldLeak") constructor(
     private val repository: DefaultCoinRepository,
     private val coinId: Int,
-    private val ConnectionContext: Context
+    private val connectionContext: Context //static field needed for ConnectivityManager and this viewmodel only gets created by factory
 ) :
     ViewModel() {
     private val _uiState = MutableStateFlow(CoinDetailsState())
@@ -47,7 +48,7 @@ class CoinDetailsViewModel(
                 CoinDetailsViewModel(
                     repository = application.container.repository,
                     coinId = coinId,
-                    ConnectionContext = application.applicationContext
+                    connectionContext = application.applicationContext
                 )
             }
         }
@@ -99,7 +100,7 @@ class CoinDetailsViewModel(
                 return@launch
             }
 
-            if (!isNetworkAvailable(ConnectionContext)) {
+            if (!isNetworkAvailable(connectionContext)) {
                 _uiState.update {
                     it.copy(
                         error = "Only prices and market info is available when offline",

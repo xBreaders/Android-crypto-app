@@ -91,8 +91,7 @@ class DefaultCoinRepositoryImpl(
      * @throws Exception for other errors.
      */
     override suspend fun getCryptoListings(): CryptoResponse {
-        val response = sharedVM.safeApiCall { coinMarketCapService.getCryptoListings() }
-        when (response) {
+        when (val response = sharedVM.safeApiCall { coinMarketCapService.getCryptoListings() }) {
             is ApiResponse.Success -> {
                 return response.data
             }

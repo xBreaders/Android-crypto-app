@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
  * This class must be abstract and extend RoomDatabase. You define the DAOs that work with the database within the abstract class.
  * Since it's a singleton, it will have a single instance across the whole application.
  */
-@Database(entities = [CoinEntity::class], version = 2)
+@Database(entities = [CoinEntity::class], version = 2, exportSchema = false)
 abstract class CoinDatabase : RoomDatabase() {
     /**
      * Abstract method with no parameters that you use to access the [CoinDao].

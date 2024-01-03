@@ -9,7 +9,7 @@ import com.example.cryptoapp.persistence.api.SharedViewModel
  *
  * This custom implementation allows central place for initializing shared resources upon application startup.
  *
- * @property container The AppContainer instance representing the application-level dependencies including the repository and retrofitservice.
+ * @property container The AppContainer instance representing the application-level dependencies including the repository and retrofit-service.
  * @property sharedVM The SharedViewModel instance which holds shared data across multiple composables related to API response handling.
  */
 class CoinApp : Application() {

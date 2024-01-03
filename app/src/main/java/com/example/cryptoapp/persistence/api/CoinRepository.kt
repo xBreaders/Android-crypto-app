@@ -1,5 +1,6 @@
 package com.example.cryptoapp.persistence.api
 
+import com.example.cryptoapp.persistence.api.response.CryptoResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
