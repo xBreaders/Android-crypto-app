@@ -15,3 +15,7 @@ Na het starten van de app kun je:
 - **Een lijst met cryptocurrencies doorbladeren.
 - **Duwen op een cryptocurrency om gedetailleerde informatie te bekijken.
 - **Opzoeken van specifieke cryptocurrencies die hierna gecached worden zodat je ze sneller terugvindt de volgende keer.
+
+
+## Documentatie
+In de branch gh-pages bevat documentatie volgens het KDoc formaat, er werd gebruik gemaakt van Dokka.
