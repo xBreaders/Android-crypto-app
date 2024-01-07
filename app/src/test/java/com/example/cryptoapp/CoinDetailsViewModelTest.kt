@@ -31,6 +31,28 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
+
+/**
+ * A test class for [CoinDetailsViewModel] to ensure that the ViewModel behaves correctly
+ * under different scenarios such as successful data fetching, failure to fetch data, and
+ * special case handling (e.g., for USDT).
+ *
+ * The class tests the [CoinDetailsViewModel] by mocking dependencies like [DefaultCoinRepository]
+ * and [Context], and uses a [TestScope] with a [UnconfinedTestDispatcher] to execute coroutines
+ * in the tests. It verifies the state changes in the ViewModel based on different responses
+ * from the repository.
+ *
+ * Annotations:
+ * - [ExperimentalCoroutinesApi]: Marks the usage of experimental API in Kotlin coroutines.
+ * - [Rule]: JUnit rule for managing threading and architecture components.
+ *
+ * @property instantExecutorRule Ensures that the architecture components execute tasks synchronously.
+ * @property mockRepository Mocked instance of [DefaultCoinRepository].
+ * @property viewModel Instance of [CoinDetailsViewModel] under test.
+ * @property testDispatcher Dispatcher used for coroutine execution in test scope.
+ * @property context Mocked instance of [Context] for the ViewModel.
+ * @property testScope Coroutine scope for launching jobs in tests.
+ */
 @ExperimentalCoroutinesApi
 class CoinDetailsViewModelTest {
 
@@ -63,7 +85,10 @@ class CoinDetailsViewModelTest {
         Dispatchers.resetMain()
     }
 
-
+    /**
+     * Tests the scenario where the ViewModel successfully fetches coin details from the repository.
+     * It verifies that the ViewModel's state correctly reflects the successful data retrieval by mocking the roomDB repository.
+     */
     @Test
     fun `fetch coin details success`() {
 
@@ -115,6 +140,10 @@ class CoinDetailsViewModelTest {
         assertEquals(coinobject, latestState.coinDetails)
     }
 
+    /**
+     * Tests the scenario where the ViewModel fails to fetch coin details from the repository (non existing coin or empty list).
+     * It verifies that the ViewModel's state correctly reflects the failure and contains an appropriate error message.
+     */
     @Test
     fun `fetch coin details failure results in appropriate error state`() {
 
@@ -133,6 +162,10 @@ class CoinDetailsViewModelTest {
         assertEquals("Failed to fetch coin details", latestState.error)
     }
 
+    /**
+     * Tests the specific case of fetching coin details for USDT. The ViewModel should recognize
+     * this special case and update its state with an error message indicating that charting is not available for USDT.
+     */
     @Test
     fun `fetch coin details for USDT results in no charting available error`() {
         val usdtCoinData = CoinData(

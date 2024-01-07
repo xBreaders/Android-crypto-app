@@ -25,6 +25,21 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 
+/**
+ * Test class for [SearchCryptoViewModel] to verify search functionalities.
+ *
+ * This class tests the [SearchCryptoViewModel] by mocking the [DefaultCoinRepository] dependency.
+ * It uses Kotlin coroutines for testing asynchronous operations and verifies different search scenarios.
+ *
+ * Annotations:
+ * - [ExperimentalCoroutinesApi]: Marks the usage of experimental API in Kotlin coroutines.
+ * - [RunWith]: MockitoJUnitRunner to enable Mockito's annotations.
+ *
+ * @property mockRepository Mocked instance of [DefaultCoinRepository].
+ * @property viewModel Instance of [SearchCryptoViewModel] under test.
+ * @property testDispatcher Dispatcher used for coroutine execution in test scope.
+ * @property testScope Coroutine scope for launching jobs in tests.
+ */
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SearchCryptoViewModelTest {
@@ -36,6 +51,10 @@ class SearchCryptoViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
     private val testScope = TestScope()
 
+    /**
+     * Sets up the environment for each test. This includes initializing mocks and setting up
+     * the test dispatcher and ViewModel.
+     */
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
@@ -43,16 +62,22 @@ class SearchCryptoViewModelTest {
         viewModel = SearchCryptoViewModel(mockRepository)
     }
 
+    /**
+     * Cleans up after each test. This typically involves resetting the main coroutine dispatcher.
+     */
     @After
     fun tearDown() {
         Dispatchers.resetMain()
     }
 
+    /**
+     * Tests that the ViewModel handles empty search results correctly. Verifies that the loading
+     * state is handled and the search results are empty.
+     */
     @Test
     fun `searchCrypto handles empty results correctly`() = runTest(testDispatcher) {
         `when`(mockRepository.getCoinByQuery(anyString())).thenReturn(flowOf(emptyList()))
         val loadingStates = mutableListOf<Boolean>()
-
 
         testScope.launch {
             viewModel.isLoading.collect { loadingStates.add(it) }
@@ -64,17 +89,16 @@ class SearchCryptoViewModelTest {
         viewModel.searchResults.first() // Wait for search results
         assertFalse(loadingStates.last())
 
-        // Verify that search results are empty
         assertTrue(viewModel.searchResults.first().isEmpty())
     }
 
+    /**
+     * Tests that the ViewModel handles exceptions during search correctly. Verifies that the loading
+     * state is updated and the search results are empty when an exception occurs.
+     */
     @Test
     fun `searchCrypto handles exceptions correctly`() = runTest(testDispatcher) {
-        `when`(mockRepository.getCoinByQuery(anyString())).thenReturn(
-            flowOf(
-                emptyList()
-            )
-        )
+        `when`(mockRepository.getCoinByQuery(anyString())).thenReturn(flowOf(emptyList()))
         `when`(mockRepository.requestCoinBySymbol(anyString())).thenThrow(RuntimeException("Error"))
 
         val loadingStates = mutableListOf<Boolean>()
@@ -89,8 +113,6 @@ class SearchCryptoViewModelTest {
         viewModel.searchResults.first() // Wait for search results
         assertFalse(loadingStates.last())
 
-
-        // Verify that search results are empty after an exception
         assertTrue(viewModel.searchResults.first().isEmpty())
     }
 }
