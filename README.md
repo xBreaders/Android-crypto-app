@@ -1,7 +1,7 @@
 # Crypto Android App
 
 ## Beschrijving
-Crypto Android App is een mobiele applicatie ontwikkeld als onderdeel van een schoolproject. De app biedt gebruikers actuele informatie over verschillende cryptocurrencies, waaronder prijzen, markttrends en gedetailleerde analyses. De app is gebouwd met Android Studio en maakt gebruik van moderne Android-ontwikkelpraktijken.
+Crypto Android App is een mobiele applicatie ontwikkeld als onderdeel van een schoolproject. De app biedt gebruikers actuele informatie over verschillende cryptocurrencies, waaronder prijzen, markttrends en gedetailleerde analyses.
 
 ## Functies
 - **Realtime Crypto Data: Toegang tot actuele informatie over cryptocurrency-prijzen en markttrends.
@@ -15,3 +15,7 @@ Na het starten van de app kun je:
 - **Een lijst met cryptocurrencies doorbladeren.
 - **Duwen op een cryptocurrency om gedetailleerde informatie te bekijken.
 - **Opzoeken van specifieke cryptocurrencies die hierna gecached worden zodat je ze sneller terugvindt de volgende keer.
+
+
+## Documentatie
+In de branch gh-pages bevat documentatie volgens het KDoc formaat, er werd gebruik gemaakt van Dokka.
